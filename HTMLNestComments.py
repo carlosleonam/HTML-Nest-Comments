@@ -1,4 +1,4 @@
-import sublime, sublime_plugin, os.path
+import sublime, sublime_plugin
 
 class NestCommand(sublime_plugin.TextCommand):
   def run(self, edit):
@@ -7,9 +7,7 @@ class NestCommand(sublime_plugin.TextCommand):
         continue
       text = self.view.substr(region)
       fileExt = self.view.window().extract_variables()['file_extension']
-      # if fileExt = 'css':
-      if 'css' in fileExt:
-          # print('Comment these nested comments')
+      if 'php' in fileExt:
         if text.startswith("/*"):
           # print('Uncomment Please')
           text = text[2:]
@@ -28,8 +26,46 @@ class NestCommand(sublime_plugin.TextCommand):
           self.view.replace(edit, region, text)
           self.view.insert(edit, self.view.sel()[0].begin(), "/*")
           self.view.insert(edit, self.view.sel()[0].end(), "*/")
-      else:
-        # if '<!--' not in text:
+      elif 'css' in fileExt:
+        if text.startswith("/*"):
+          # print('Uncomment Please')
+          text = text[2:]
+          text = text[:-2]
+          text = text.replace('<~?', '<?')
+          text = text.replace('?~>', '?>')
+          text = text.replace('/~*', '/*')
+          text = text.replace('*~/', '*/')
+          self.view.replace(edit, region, text)
+        else:
+          # print('Comment these nested comments')
+          text = text.replace('<?', '<~?')
+          text = text.replace('?>', '?~>')
+          text = text.replace('/*', '/~*')
+          text = text.replace('*/', '*~/')
+          self.view.replace(edit, region, text)
+          self.view.insert(edit, self.view.sel()[0].begin(), "/*")
+          self.view.insert(edit, self.view.sel()[0].end(), "*/")
+      elif 'js' in fileExt:
+        if text.startswith("/*"):
+          # print('Uncomment Please')
+          text = text[2:]
+          text = text[:-2]
+          text = text.replace('<~?', '<?')
+          text = text.replace('?~>', '?>')
+          text = text.replace('/~*', '/*')
+          text = text.replace('*~/', '*/')
+          self.view.replace(edit, region, text)
+        else:
+          # print('Comment these nested comments')
+          text = text.replace('<?', '<~?')
+          text = text.replace('?>', '?~>')
+          text = text.replace('/*', '/~*')
+          text = text.replace('*/', '*~/')
+          self.view.replace(edit, region, text)
+          self.view.insert(edit, self.view.sel()[0].begin(), "/*")
+          self.view.insert(edit, self.view.sel()[0].end(), "*/")
+      # else:
+      elif 'html' in fileExt:
         if text.startswith("<!--"):
           # print('Uncomment Please')
           text = text[4:]
